@@ -41,7 +41,7 @@ export const useTaskChat = () => useQuery({ queryKey: tmKeys.comments, queryFn: 
 
 /* ------------------------------- realtime -------------------------------- */
 
-const REALTIME_TABLES: Array<{ table: string; keys: readonly unknown[][] }> = [
+const REALTIME_TABLES: Array<{ table: string; keys: ReadonlyArray<readonly unknown[]> }> = [
   { table: "tm_tasks", keys: [tmKeys.tasks, tmKeys.activity, tmKeys.escalations] },
   { table: "tm_subtasks", keys: [tmKeys.tasks] },
   { table: "tm_comments", keys: [tmKeys.comments] },
