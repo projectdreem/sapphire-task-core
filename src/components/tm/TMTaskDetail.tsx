@@ -116,7 +116,7 @@ export function TMTaskDetail({ taskId, onOpenChange }: { taskId: string | null; 
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div className="space-y-2">
                     <Label>Status</Label>
-                    <Select value={task.status} onValueChange={(status) => changeStatus.mutate({ task, status: status as typeof task.status, note: note || undefined })}>
+                    <Select value={task.status} onValueChange={(status) => changeStatus.mutate({ task, status: status as typeof task.status, note: note || "" })}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
                         {TM_STATUSES.map((s) => (

@@ -125,7 +125,7 @@ export function TMEscalation({ onOpenTask }: { onOpenTask: (taskId: string) => v
                       onChange={(e) => setResolution({ ...resolution, [esc.id]: e.target.value })}
                     />
                     <Button size="sm" variant="outline" onClick={() => update.mutate({ id: esc.id, status: "acknowledged" })}>Acknowledge</Button>
-                    <Button size="sm" onClick={() => update.mutate({ id: esc.id, status: "resolved", resolution: resolution[esc.id] })}>Resolve</Button>
+                    <Button size="sm" onClick={() => update.mutate({ id: esc.id, status: "resolved", resolution: resolution[esc.id] ?? "" })}>Resolve</Button>
                   </>
                 )}
                 {esc.task_id && <Button size="sm" variant="ghost" onClick={() => onOpenTask(esc.task_id)}>Open</Button>}

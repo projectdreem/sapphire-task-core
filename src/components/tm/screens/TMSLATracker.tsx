@@ -16,7 +16,7 @@ export function TMSLATracker({ onOpenTask }: { onOpenTask: (taskId: string) => v
     () =>
       (tasks ?? [])
         .map((task) => ({ task, sla: computeSLA(task, warn) }))
-        .sort((a, b) => b.sla.percentUsed - a.sla.percentUsed),
+        .sort((a, b) => b.sla.percent - a.sla.percent),
     [tasks, warn],
   );
 
@@ -48,9 +48,9 @@ export function TMSLATracker({ onOpenTask }: { onOpenTask: (taskId: string) => v
                   <span className={`text-xs font-medium ${sla.className}`}>{sla.label}</span>
                 </div>
                 <p className="truncate text-sm text-foreground">{task.title}</p>
-                <Progress value={Math.min(100, sla.percentUsed)} className="h-2 max-w-md" />
+                <Progress value={Math.min(100, sla.percent)} className="h-2 max-w-md" />
                 <p className="text-xs text-muted-foreground">
-                  {titleCase(task.category)} • {task.sla_hours}h SLA • deadline {formatDateTime(task.deadline)} • {sla.percentUsed}% used
+                  {titleCase(task.category)} • {task.sla_hours}h SLA • deadline {formatDateTime(task.deadline)} • {sla.percent}% used
                 </p>
               </div>
               <Button size="sm" variant="outline" onClick={() => onOpenTask(task.id)}>Open</Button>
