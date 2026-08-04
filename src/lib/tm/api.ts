@@ -245,6 +245,17 @@ export async function createTask(input: Omit<TMTaskInsert, "code"> & { subtasks?
     }
   }
 
+  if (created.approval_status === "pending") {
+    const { error: approvalError } = await supabase.from("tm_approvals").insert({
+      task_id: created.id,
+      stage: "manager",
+      approver_name: "Task Manager",
+      status: "pending",
+      position: 1,
+    });
+    if (approvalError) throw new Error(`Create approval workflow: ${approvalError.message}`);
+  }
+
   await logActivity({
     task_id: created.id,
     action: "Task created",
