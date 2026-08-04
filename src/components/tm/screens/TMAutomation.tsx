@@ -12,8 +12,17 @@ import { formatDateTime, titleCase } from "@/lib/tm/format";
 import { useAutomations, useCreateAutomation, useToggleAutomation } from "@/lib/tm/hooks";
 import { TMEmpty, TMLoading, TMPageHeader, TMPanel, TMRow } from "../shared";
 
-const TRIGGERS = ["task_created", "status_changed", "sla_warning", "sla_breach", "unassigned_timeout", "approval_pending", "review_failed"];
-const ACTIONS = ["auto_assign", "notify", "escalate", "activate_buzzer", "reassign", "add_comment", "set_priority"];
+const TRIGGERS = [
+  "task_created",
+  "status_changed",
+  "sla_at_risk",
+  "sla_breached",
+  "unassigned_timeout",
+  "approval_pending",
+  "task_completed",
+  "daily_digest",
+];
+const ACTIONS = ["assign", "notify", "escalate", "set_priority", "add_tag", "buzzer", "ai_review"];
 
 export function TMAutomation() {
   const { data: automations, isLoading } = useAutomations();

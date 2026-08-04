@@ -26,7 +26,14 @@ export const tmKeys = {
 
 export const useTasks = () => useQuery({ queryKey: tmKeys.tasks, queryFn: api.fetchTasks });
 export const useTask = (id: string | null) =>
-  useQuery({ queryKey: tmKeys.task(id ?? "none"), queryFn: () => api.fetchTask(id!), enabled: Boolean(id) });
+  useQuery({
+    queryKey: tmKeys.task(id ?? "none"),
+    queryFn: () => {
+      if (!id) throw new Error("A task ID is required");
+      return api.fetchTask(id);
+    },
+    enabled: Boolean(id),
+  });
 export const useMembers = () => useQuery({ queryKey: tmKeys.members, queryFn: api.fetchMembers });
 export const useSettings = () => useQuery({ queryKey: tmKeys.settings, queryFn: api.fetchSettings });
 export const useAutomations = () => useQuery({ queryKey: tmKeys.automations, queryFn: api.fetchAutomations });

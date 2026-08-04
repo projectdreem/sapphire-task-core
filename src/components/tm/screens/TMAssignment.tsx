@@ -67,7 +67,8 @@ export function TMAssignment({ onOpenTask }: { onOpenTask: (taskId: string) => v
                   size="sm"
                   disabled={!draft[task.id] || assign.isPending}
                   onClick={() => {
-                    const memberId = draft[task.id]!;
+                    const memberId = draft[task.id];
+                    if (!memberId) return;
                     const member = (members ?? []).find((m) => m.id === memberId);
                     if (member) assign.mutate({ task, memberId, memberName: member.full_name });
                   }}

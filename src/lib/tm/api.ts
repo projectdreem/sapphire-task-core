@@ -245,6 +245,17 @@ export async function createTask(input: Omit<TMTaskInsert, "code"> & { subtasks?
     }
   }
 
+  if (created.approval_status === "pending") {
+    const { error: approvalError } = await supabase.from("tm_approvals").insert({
+      task_id: created.id,
+      stage: "manager",
+      approver_name: "Task Manager",
+      status: "pending",
+      position: 1,
+    });
+    if (approvalError) throw new Error(`Create approval workflow: ${approvalError.message}`);
+  }
+
   await logActivity({
     task_id: created.id,
     action: "Task created",
@@ -358,10 +369,17 @@ export async function timerAction(task: TMTask, action: TimerAction, note?: stri
   const patch: TMTaskUpdate = {};
   let addedMinutes = 0;
 
+  if ((action === "start" || action === "resume") && task.timer_running) {
+    throw new Error("The timer is already running");
+  }
+  if ((action === "pause" || action === "stop") && !task.timer_running) {
+    throw new Error("The timer is not running");
+  }
+
   if (action === "start" || action === "resume") {
     patch.timer_running = true;
     patch.started_at = task.started_at ?? nowIso;
-    patch.paused_at = null;
+    patch.paused_at = nowIso;
     if (task.status === "new" || task.status === "assigned" || task.status === "accepted") {
       patch.status = "in_progress";
     }
@@ -371,7 +389,7 @@ export async function timerAction(task: TMTask, action: TimerAction, note?: stri
       addedMinutes = Math.max(0, Math.floor((now.getTime() - new Date(anchor).getTime()) / 60000));
     }
     patch.timer_running = false;
-    patch.paused_at = nowIso;
+    patch.paused_at = action === "pause" ? nowIso : null;
     patch.actual_minutes = task.actual_minutes + addedMinutes;
     if (action === "pause") {
       patch.total_paused_minutes = task.total_paused_minutes;
@@ -384,7 +402,7 @@ export async function timerAction(task: TMTask, action: TimerAction, note?: stri
     task_id: task.id,
     member_id: task.assigned_to,
     action,
-    started_at: nowIso,
+    started_at: action === "start" || action === "resume" ? nowIso : (task.paused_at ?? task.started_at ?? nowIso),
     ended_at: action === "start" || action === "resume" ? null : nowIso,
     seconds: addedMinutes * 60,
     note: note ?? null,
