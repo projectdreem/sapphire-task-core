@@ -17,9 +17,9 @@ function startOfDay(ms: number) {
 }
 
 const TONE: Record<string, string> = {
-  completed: "bg-[color:var(--tm-success,theme(colors.emerald.500))]/70",
+  completed: "bg-success/70",
   on_track: "bg-primary/70",
-  at_risk: "bg-[color:var(--tm-warning,theme(colors.amber.500))]/70",
+  at_risk: "bg-warning/70",
   breached: "bg-destructive/70",
 };
 
