@@ -78,7 +78,7 @@ export function TMBuzzer({ onOpenTask }: { onOpenTask: (taskId: string) => void 
     <div className="space-y-6">
       <TMPageHeader
         title="Buzzer Alert System"
-        subtitle="Unmissable alerts for critical and unaccepted work • repeats every"
+        subtitle="Unmissable alerts for critical and unaccepted work"
         actions={
           <div className="flex items-center gap-3">
             <Badge variant="outline">{settings?.buzzer_repeat_minutes ?? 10} min repeat</Badge>
