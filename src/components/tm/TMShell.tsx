@@ -20,6 +20,11 @@ import { TMSidebar, TM_NAV, type TMScreen } from "./TMSidebar";
 import { TMTaskDetail } from "./TMTaskDetail";
 import { TMDashboard } from "./screens/TMDashboard";
 import { TMInbox } from "./screens/TMInbox";
+import { TMPipeline } from "./screens/TMPipeline";
+import { TMGantt } from "./screens/TMGantt";
+import { TMBuzzer } from "./screens/TMBuzzer";
+import { TMChat } from "./screens/TMChat";
+import { TMWallet } from "./screens/TMWallet";
 import { TMTaskCreation } from "./screens/TMTaskCreation";
 import { TMAIGenerator } from "./screens/TMAIGenerator";
 import { TMAssignment } from "./screens/TMAssignment";
@@ -55,6 +60,7 @@ export function TMShell() {
       task_approval: (approvals ?? []).filter((a) => a.status === "pending").length,
       task_escalation: (escalations ?? []).filter((e) => e.status === "open").length,
       task_sla_tracker: (tasks ?? []).filter((t) => computeSLA(t).state === "breached").length,
+      task_buzzer: (tasks ?? []).filter((t) => t.buzzer_active).length,
     }),
     [tasks, approvals, escalations],
   );
@@ -68,6 +74,8 @@ export function TMShell() {
         return <TMDashboard onNavigate={setScreen} />;
       case "task_inbox":
         return <TMInbox onOpenTask={openTask} />;
+      case "task_pipeline":
+        return <TMPipeline onOpenTask={openTask} />;
       case "task_creation":
         return <TMTaskCreation onCreated={openTask} />;
       case "ai_task_generator":
@@ -76,6 +84,8 @@ export function TMShell() {
         return <TMAssignment onOpenTask={openTask} />;
       case "task_execution":
         return <TMExecution onOpenTask={openTask} />;
+      case "task_gantt":
+        return <TMGantt onOpenTask={openTask} />;
       case "task_dependency":
         return <TMDependency onOpenTask={openTask} />;
       case "task_approval":
@@ -86,6 +96,12 @@ export function TMShell() {
         return <TMSLATracker onOpenTask={openTask} />;
       case "task_escalation":
         return <TMEscalation onOpenTask={openTask} />;
+      case "task_buzzer":
+        return <TMBuzzer onOpenTask={openTask} />;
+      case "task_chat":
+        return <TMChat onOpenTask={openTask} />;
+      case "task_wallet":
+        return <TMWallet onOpenTask={openTask} />;
       case "task_automation":
         return <TMAutomation />;
       case "task_history":
@@ -96,6 +112,8 @@ export function TMShell() {
         return <TMAuditLog />;
       case "task_settings":
         return <TMSettings />;
+      default:
+        return <TMDashboard onNavigate={setScreen} />;
     }
   };
 

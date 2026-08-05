@@ -2,22 +2,27 @@ import type { ElementType } from "react";
 import {
   ArrowUpCircle,
   BarChart3,
+  Bell,
   Bot,
+  Calendar,
   CheckCircle,
   ChevronLeft,
   ChevronRight,
   ClipboardCheck,
   Clock,
+  Columns3,
   FileText,
   GitBranch,
   History,
   Inbox,
   LayoutDashboard,
   ListChecks,
+  MessageSquare,
   Play,
   PlusCircle,
   Settings,
   UserCheck,
+  Wallet,
   Zap,
 } from "lucide-react";
 
@@ -28,15 +33,20 @@ import { cn } from "@/lib/utils";
 export type TMScreen =
   | "task_dashboard"
   | "task_inbox"
+  | "task_pipeline"
   | "task_creation"
   | "ai_task_generator"
   | "task_assignment"
   | "task_execution"
+  | "task_gantt"
   | "task_dependency"
   | "task_approval"
   | "task_review"
   | "task_sla_tracker"
   | "task_escalation"
+  | "task_buzzer"
+  | "task_chat"
+  | "task_wallet"
   | "task_automation"
   | "task_history"
   | "task_analytics"
@@ -52,15 +62,20 @@ interface SidebarItem {
 export const TM_NAV: SidebarItem[] = [
   { id: "task_dashboard", label: "Task Dashboard", icon: LayoutDashboard },
   { id: "task_inbox", label: "Task Inbox", icon: Inbox },
+  { id: "task_pipeline", label: "Task Pipeline", icon: Columns3 },
   { id: "task_creation", label: "Task Creation", icon: PlusCircle },
   { id: "ai_task_generator", label: "AI Task Generator", icon: Bot },
   { id: "task_assignment", label: "Task Assignment", icon: UserCheck },
   { id: "task_execution", label: "Task Execution", icon: Play },
+  { id: "task_gantt", label: "Timeline & Gantt", icon: Calendar },
   { id: "task_dependency", label: "Task Dependency", icon: GitBranch },
   { id: "task_approval", label: "Task Approval", icon: CheckCircle },
   { id: "task_review", label: "Task Review", icon: ClipboardCheck },
   { id: "task_sla_tracker", label: "Task SLA Tracker", icon: Clock },
   { id: "task_escalation", label: "Task Escalation", icon: ArrowUpCircle },
+  { id: "task_buzzer", label: "Buzzer Alerts", icon: Bell },
+  { id: "task_chat", label: "Task Chat", icon: MessageSquare },
+  { id: "task_wallet", label: "Task Wallet", icon: Wallet },
   { id: "task_automation", label: "Task Automation", icon: Zap },
   { id: "task_history", label: "Task History", icon: History },
   { id: "task_analytics", label: "Task Analytics", icon: BarChart3 },
