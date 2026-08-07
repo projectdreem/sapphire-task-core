@@ -225,8 +225,50 @@ async function nextTaskCode(): Promise<string> {
   return `TSK-${Number.isFinite(n) ? n + 1 : 1001}`;
 }
 
-export async function createTask(input: Omit<TMTaskInsert, "code"> & { subtasks?: string[] }): Promise<TMTask> {
-  const { subtasks, ...task } = input;
+export const TM_ATTACHMENT_BUCKET = "tm-attachments";
+
+function attachmentKind(file: File): string {
+  if (file.type.startsWith("image/")) return "image";
+  if (file.type.includes("pdf")) return "pdf";
+  if (file.type.startsWith("video/")) return "video";
+  if (file.type.includes("zip") || file.type.includes("compressed")) return "archive";
+  return "document";
+}
+
+/** Uploads real files to storage and records them against the task. */
+export async function uploadTaskAttachments(taskId: string, files: File[], uploadedBy = "Task Manager") {
+  for (const file of files) {
+    const path = `${taskId}/${Date.now()}-${file.name.replace(/[^\w.\-]+/g, "_")}`;
+    const { error: uploadError } = await supabase.storage.from(TM_ATTACHMENT_BUCKET).upload(path, file, {
+      cacheControl: "3600",
+      upsert: false,
+    });
+    if (uploadError) throw new Error(`Upload ${file.name}: ${uploadError.message}`);
+    const { error: rowError } = await supabase.from("tm_attachments").insert({
+      task_id: taskId,
+      name: file.name,
+      file_type: attachmentKind(file),
+      url: path,
+      size_kb: Math.max(1, Math.round(file.size / 1024)),
+      uploaded_by: uploadedBy,
+    });
+    if (rowError) throw new Error(`Record ${file.name}: ${rowError.message}`);
+  }
+}
+
+/** Signs a stored attachment path for temporary download access. */
+export async function getAttachmentUrl(path: string): Promise<string> {
+  const { data, error } = await supabase.storage.from(TM_ATTACHMENT_BUCKET).createSignedUrl(path, 300);
+  if (error || !data) throw new Error(`Attachment link: ${error?.message ?? "unavailable"}`);
+  return data.signedUrl;
+}
+
+export type TMApproverDraft = { approver_id: string | null; approver_name: string; stage: string };
+
+export async function createTask(
+  input: Omit<TMTaskInsert, "code"> & { subtasks?: string[]; approvers?: TMApproverDraft[]; files?: File[] },
+): Promise<TMTask> {
+  const { subtasks, approvers, files, ...task } = input;
   const code = await nextTaskCode();
   const { data, error } = await supabase
     .from("tm_tasks")
@@ -246,15 +288,21 @@ export async function createTask(input: Omit<TMTaskInsert, "code"> & { subtasks?
   }
 
   if (created.approval_status === "pending") {
-    const { error: approvalError } = await supabase.from("tm_approvals").insert({
-      task_id: created.id,
-      stage: "manager",
-      approver_name: "Task Manager",
-      status: "pending",
-      position: 1,
-    });
+    const rows = (approvers?.length ? approvers : [{ approver_id: null, approver_name: "Task Manager", stage: "manager" }]).map(
+      (approver, index) => ({
+        task_id: created.id,
+        stage: approver.stage,
+        approver_id: approver.approver_id,
+        approver_name: approver.approver_name,
+        status: "pending",
+        position: index + 1,
+      }),
+    );
+    const { error: approvalError } = await supabase.from("tm_approvals").insert(rows);
     if (approvalError) throw new Error(`Create approval workflow: ${approvalError.message}`);
   }
+
+  if (files?.length) await uploadTaskAttachments(created.id, files);
 
   await logActivity({
     task_id: created.id,
