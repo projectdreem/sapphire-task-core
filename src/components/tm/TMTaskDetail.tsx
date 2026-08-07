@@ -293,9 +293,28 @@ export function TMTaskDetail({ taskId, onOpenChange }: { taskId: string | null; 
                   </div>
                 </div>
 
-                <div className="space-y-1 rounded-lg border border-border bg-muted/40 p-3 text-xs text-muted-foreground">
+                <div className="space-y-2 rounded-lg border border-border bg-muted/40 p-3 text-xs text-muted-foreground">
                   <p className="flex items-center gap-2"><Clock className="h-3 w-3" /> Created {formatDateTime(task.created_at)}</p>
-                  <p>Attachments: {task.attachments.length}</p>
+                  <div className="space-y-1">
+                    <p>Attachments: {task.attachments.length}</p>
+                    {task.attachments.map((file) => (
+                      <button
+                        key={file.id}
+                        type="button"
+                        className="block text-left text-xs text-primary underline-offset-2 hover:underline"
+                        onClick={async () => {
+                          try {
+                            const url = await getAttachmentUrl(file.url);
+                            window.open(url, "_blank", "noopener");
+                          } catch (error) {
+                            toast.error((error as Error).message);
+                          }
+                        }}
+                      >
+                        {file.name} · {file.size_kb} KB
+                      </button>
+                    ))}
+                  </div>
                   <p>Tags: {task.tags.length ? task.tags.join(", ") : "—"}</p>
                 </div>
               </div>
