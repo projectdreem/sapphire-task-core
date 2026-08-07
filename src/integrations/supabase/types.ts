@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           action: string
           action_type: string
+          actor_id: string | null
           actor_name: string
           actor_role: string
           created_at: string
@@ -27,10 +28,12 @@ export type Database = {
           meta: Json
           task_id: string | null
           to_value: string | null
+          updated_at: string
         }
         Insert: {
           action: string
           action_type?: string
+          actor_id?: string | null
           actor_name?: string
           actor_role?: string
           created_at?: string
@@ -40,10 +43,12 @@ export type Database = {
           meta?: Json
           task_id?: string | null
           to_value?: string | null
+          updated_at?: string
         }
         Update: {
           action?: string
           action_type?: string
+          actor_id?: string | null
           actor_name?: string
           actor_role?: string
           created_at?: string
@@ -53,8 +58,16 @@ export type Database = {
           meta?: Json
           task_id?: string | null
           to_value?: string | null
+          updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "tm_activity_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "tm_members"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "tm_activity_task_id_fkey"
             columns: ["task_id"]
@@ -76,6 +89,7 @@ export type Database = {
           stage: string
           status: string
           task_id: string
+          updated_at: string
         }
         Insert: {
           approver_id?: string | null
@@ -88,6 +102,7 @@ export type Database = {
           stage?: string
           status?: string
           task_id: string
+          updated_at?: string
         }
         Update: {
           approver_id?: string | null
@@ -100,6 +115,7 @@ export type Database = {
           stage?: string
           status?: string
           task_id?: string
+          updated_at?: string
         }
         Relationships: [
           {
@@ -126,6 +142,7 @@ export type Database = {
           name: string
           size_kb: number
           task_id: string
+          updated_at: string
           uploaded_by: string
           url: string
         }
@@ -136,6 +153,7 @@ export type Database = {
           name: string
           size_kb?: number
           task_id: string
+          updated_at?: string
           uploaded_by?: string
           url?: string
         }
@@ -146,6 +164,7 @@ export type Database = {
           name?: string
           size_kb?: number
           task_id?: string
+          updated_at?: string
           uploaded_by?: string
           url?: string
         }
@@ -214,6 +233,7 @@ export type Database = {
           is_system: boolean
           message: string
           task_id: string
+          updated_at: string
         }
         Insert: {
           author_id?: string | null
@@ -224,6 +244,7 @@ export type Database = {
           is_system?: boolean
           message: string
           task_id: string
+          updated_at?: string
         }
         Update: {
           author_id?: string | null
@@ -234,6 +255,7 @@ export type Database = {
           is_system?: boolean
           message?: string
           task_id?: string
+          updated_at?: string
         }
         Relationships: [
           {
@@ -260,6 +282,7 @@ export type Database = {
           id: string
           status: string
           task_id: string
+          updated_at: string
         }
         Insert: {
           created_at?: string
@@ -268,6 +291,7 @@ export type Database = {
           id?: string
           status?: string
           task_id: string
+          updated_at?: string
         }
         Update: {
           created_at?: string
@@ -276,6 +300,7 @@ export type Database = {
           id?: string
           status?: string
           task_id?: string
+          updated_at?: string
         }
         Relationships: [
           {
@@ -306,6 +331,7 @@ export type Database = {
           resolved_at: string | null
           status: string
           task_id: string
+          updated_at: string
         }
         Insert: {
           created_at?: string
@@ -318,6 +344,7 @@ export type Database = {
           resolved_at?: string | null
           status?: string
           task_id: string
+          updated_at?: string
         }
         Update: {
           created_at?: string
@@ -330,6 +357,7 @@ export type Database = {
           resolved_at?: string | null
           status?: string
           task_id?: string
+          updated_at?: string
         }
         Relationships: [
           {
@@ -390,6 +418,7 @@ export type Database = {
           read: boolean
           task_id: string | null
           title: string
+          updated_at: string
         }
         Insert: {
           channel?: string
@@ -400,6 +429,7 @@ export type Database = {
           read?: boolean
           task_id?: string | null
           title: string
+          updated_at?: string
         }
         Update: {
           channel?: string
@@ -410,6 +440,7 @@ export type Database = {
           read?: boolean
           task_id?: string | null
           title?: string
+          updated_at?: string
         }
         Relationships: [
           {
@@ -431,6 +462,7 @@ export type Database = {
           reviewer_name: string
           task_id: string
           timeliness_score: number
+          updated_at: string
           verdict: string
         }
         Insert: {
@@ -442,6 +474,7 @@ export type Database = {
           reviewer_name: string
           task_id: string
           timeliness_score?: number
+          updated_at?: string
           verdict?: string
         }
         Update: {
@@ -453,6 +486,7 @@ export type Database = {
           reviewer_name?: string
           task_id?: string
           timeliness_score?: number
+          updated_at?: string
           verdict?: string
         }
         Relationships: [
@@ -537,6 +571,7 @@ export type Database = {
           position: number
           task_id: string
           title: string
+          updated_at: string
         }
         Insert: {
           completed?: boolean
@@ -545,6 +580,7 @@ export type Database = {
           position?: number
           task_id: string
           title: string
+          updated_at?: string
         }
         Update: {
           completed?: boolean
@@ -553,6 +589,7 @@ export type Database = {
           position?: number
           task_id?: string
           title?: string
+          updated_at?: string
         }
         Relationships: [
           {
@@ -707,6 +744,7 @@ export type Database = {
           seconds: number
           started_at: string
           task_id: string
+          updated_at: string
         }
         Insert: {
           action: string
@@ -718,6 +756,7 @@ export type Database = {
           seconds?: number
           started_at?: string
           task_id: string
+          updated_at?: string
         }
         Update: {
           action?: string
@@ -729,6 +768,7 @@ export type Database = {
           seconds?: number
           started_at?: string
           task_id?: string
+          updated_at?: string
         }
         Relationships: [
           {
