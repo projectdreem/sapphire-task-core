@@ -266,7 +266,11 @@ export async function getAttachmentUrl(path: string): Promise<string> {
 export type TMApproverDraft = { approver_id: string | null; approver_name: string; stage: string };
 
 export async function createTask(
-  input: Omit<TMTaskInsert, "code"> & { subtasks?: string[]; approvers?: TMApproverDraft[]; files?: File[] },
+  input: Omit<TMTaskInsert, "code"> & {
+    subtasks?: string[] | undefined;
+    approvers?: TMApproverDraft[] | undefined;
+    files?: File[] | undefined;
+  },
 ): Promise<TMTask> {
   const { subtasks, approvers, files, ...task } = input;
   const code = await nextTaskCode();
