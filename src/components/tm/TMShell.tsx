@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Bell, CheckCheck } from "lucide-react";
+import { Bell, CheckCheck, Menu, Search } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ import {
   useTasks,
 } from "@/lib/tm/hooks";
 import { computeSLA } from "@/lib/tm/format";
-import { TMSidebar, TM_NAV, type TMScreen } from "./TMSidebar";
+import { TMSidebar, TM_NAV, useTMSidebarState, type TMScreen } from "./TMSidebar";
 import { TMTaskDetail } from "./TMTaskDetail";
 import { TMDashboard } from "./screens/TMDashboard";
 import { TMInbox } from "./screens/TMInbox";
@@ -43,7 +43,7 @@ import { TMSettings } from "./screens/TMSettings";
 export function TMShell() {
   useRealtimeTasks();
   const [screen, setScreen] = useState<TMScreen>("task_dashboard");
-  const [collapsed, setCollapsed] = useState(false);
+  const { collapsed, toggleCollapsed, mobileOpen, setMobileOpen } = useTMSidebarState();
   const [openTaskId, setOpenTaskId] = useState<string | null>(null);
 
   const { data: tasks } = useTasks();
@@ -120,28 +120,48 @@ export function TMShell() {
   const activeLabel = TM_NAV.find((item) => item.id === screen)?.label ?? "Task Manager";
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-background">
+    <div className="flex min-h-screen w-full bg-background">
       <TMSidebar
         activeScreen={screen}
         onScreenChange={setScreen}
         collapsed={collapsed}
-        onToggleCollapse={() => setCollapsed((v) => !v)}
+        onToggleCollapse={toggleCollapsed}
         badges={badges}
+        mobileOpen={mobileOpen}
+        onCloseMobile={() => setMobileOpen(false)}
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-14 shrink-0 items-center justify-between border-b border-border px-6">
-          <p className="font-display text-sm font-medium text-foreground">{activeLabel}</p>
+        <header className="sticky top-0 z-40 flex h-14 shrink-0 items-center gap-1.5 border-b border-border bg-background/80 px-3 backdrop-blur-xl lg:px-5">
+          <button
+            className="icon3d grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-foreground lg:hidden"
+            onClick={() => setMobileOpen(true)}
+            aria-label="Open menu"
+          >
+            <Menu className="h-[18px] w-[18px]" />
+          </button>
+          <p className="min-w-0 truncate text-sm font-medium text-foreground">{activeLabel}</p>
+          <div className="flex-1" />
+          <button
+            className="icon3d hidden h-9 w-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-foreground sm:grid"
+            onClick={() => setScreen("task_inbox")}
+            aria-label="Search tasks"
+          >
+            <Search className="h-[18px] w-[18px]" />
+          </button>
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative" aria-label="Notifications">
-                <Bell className="h-4 w-4" />
+              <button
+                className="icon3d relative grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-foreground"
+                aria-label="Notifications"
+              >
+                <Bell className="h-[18px] w-[18px]" />
                 {unread.length > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-destructive px-1 text-[10px] text-destructive-foreground">
+                  <span className="absolute -right-1 -top-1 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-primary px-1 text-[10px] font-bold leading-none text-primary-foreground ring-2 ring-background">
                     {unread.length}
                   </span>
                 )}
-              </Button>
+              </button>
             </PopoverTrigger>
             <PopoverContent align="end" className="w-80 p-0">
               <div className="flex items-center justify-between border-b border-border p-3">
@@ -179,7 +199,11 @@ export function TMShell() {
           </Popover>
         </header>
 
-        <main className="scrollbar-slim flex-1 overflow-y-auto p-6">{content()}</main>
+        <main className="flex-1">
+          <div className="mx-auto w-full max-w-[1600px] space-y-6 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+            {content()}
+          </div>
+        </main>
       </div>
 
       <TMTaskDetail taskId={openTaskId} onOpenChange={(open) => !open && setOpenTaskId(null)} />
