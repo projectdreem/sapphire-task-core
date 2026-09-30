@@ -174,15 +174,15 @@ export function TMSidebar({
           onCloseMobile?.();
         }}
         className={cn(
-          "group/item relative flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm transition-colors duration-150",
+          "group/item relative flex w-full items-center gap-2.5 rounded-md border border-transparent px-3 py-2 text-[13px] transition-colors duration-150",
           collapsed && "justify-center px-0",
           active
-            ? "bg-primary/18 font-medium text-foreground"
-            : "text-muted-foreground hover:bg-white/[0.04] hover:text-foreground",
+            ? "border-primary/25 bg-primary/10 font-medium text-foreground"
+            : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
         )}
       >
-        {active && <span className="absolute bottom-1.5 left-0 top-1.5 w-[2px] rounded-full bg-primary" />}
-        <item.icon className="h-4 w-4 shrink-0" />
+        {active && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />}
+        <item.icon className={cn("h-4 w-4 shrink-0", active && "text-primary")} />
         {!collapsed && (
           <>
             <span className="truncate">{item.label}</span>
@@ -204,7 +204,7 @@ export function TMSidebar({
     <div className="flex h-full flex-col">
       <div
         className={cn(
-          "flex h-16 shrink-0 items-center gap-2 border-b border-border px-3",
+          "flex h-[68px] shrink-0 items-center gap-2 border-b border-sidebar-border px-4",
           collapsed && "justify-center px-0",
         )}
       >
@@ -214,13 +214,13 @@ export function TMSidebar({
             onScreenChange("task_dashboard");
             onCloseMobile?.();
           }}
-          className="flex min-w-0 items-center gap-2"
+          className="flex min-w-0 items-center gap-3"
         >
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-primary-glow text-primary-foreground">
-            <ListChecks className="h-5 w-5" />
+          <span className="grid h-8 w-8 shrink-0 rotate-45 place-items-center rounded-lg bg-primary text-primary-foreground shadow-lg shadow-primary/20">
+            <ListChecks className="h-4 w-4 -rotate-45" />
           </span>
           {!collapsed && (
-            <span className="truncate text-sm font-semibold tracking-tight">Software Vala</span>
+            <span className="truncate text-sm font-bold uppercase">Software Vala</span>
           )}
         </button>
         {!collapsed && (
@@ -252,8 +252,8 @@ export function TMSidebar({
       )}
 
       {!collapsed && (
-        <div className="shrink-0 px-3 pt-3">
-          <div className="focus-glow flex items-center gap-2 rounded-lg border border-border bg-surface px-2.5 py-1.5">
+        <div className="shrink-0 px-3 pt-4">
+          <div className="focus-glow flex items-center gap-2 rounded-md border border-sidebar-border bg-background/40 px-2.5 py-2">
             <Search className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
             <input
               value={query}
@@ -266,7 +266,7 @@ export function TMSidebar({
         </div>
       )}
 
-      <nav className="scrollbar-slim flex-1 space-y-3 overflow-y-auto px-2 py-3">
+      <nav className="scrollbar-slim flex-1 space-y-4 overflow-y-auto px-3 py-4">
         <div className="space-y-0.5">
           {PRIMARY.map((item) => (
             <ItemLink key={item.id} item={item} />
@@ -288,7 +288,7 @@ export function TMSidebar({
             <div key={group.label}>
               <button
                 onClick={() => setOpenGroups((s) => ({ ...s, [group.label]: !open }))}
-                className="flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground"
+                className="flex w-full items-center justify-between rounded-md px-3 py-1.5 text-[10px] font-bold uppercase text-muted-foreground transition-colors hover:text-foreground"
               >
                 {group.label}
                 <ChevronDown className={cn("h-3.5 w-3.5 transition-transform duration-200", open && "rotate-180")} />
@@ -317,8 +317,8 @@ export function TMSidebar({
     <>
       <aside
         className={cn(
-          "sticky top-0 hidden h-screen shrink-0 flex-col border-r border-border bg-background/80 backdrop-blur-xl transition-[width] duration-200 lg:flex",
-          collapsed ? "w-[72px]" : "w-[264px]",
+          "sticky top-0 hidden h-screen shrink-0 flex-col border-r border-sidebar-border bg-sidebar transition-[width] duration-200 lg:flex",
+          collapsed ? "w-[68px]" : "w-64",
         )}
       >
         {content}

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles } from "lucide-react";
+import { Activity } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import {
@@ -26,18 +26,16 @@ export function TMPageHeader({
 }) {
   return (
     <section className="hero-surface enter-soft relative overflow-hidden p-5 sm:p-7 lg:p-8">
-      <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -left-10 h-56 w-56 rounded-full bg-accent-pink/30 blur-3xl" />
-
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-2/5 bg-primary/10 [clip-path:polygon(32%_0,100%_0,100%_100%,0_100%)]" />
       <div className="relative grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4 sm:flex sm:flex-wrap sm:justify-between">
         <div className="min-w-0">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-3 py-1 text-[11px] font-medium backdrop-blur">
-            <Sparkles className="h-3.5 w-3.5" /> {badge ?? "Task Operations"}
+          <div className="inline-flex items-center gap-2 rounded border border-primary-foreground/15 bg-primary-foreground/10 px-2.5 py-1 text-[10px] font-bold uppercase text-primary-foreground/80 backdrop-blur">
+            <Activity className="h-3.5 w-3.5" /> {badge ?? "Operations Control"}
           </div>
-          <h1 className="mt-3 truncate text-2xl font-semibold tracking-tight sm:text-3xl lg:text-[34px]">
+          <h1 className="mt-4 truncate text-2xl font-bold sm:text-3xl">
             {title}
           </h1>
-          <p className="mt-1.5 max-w-2xl text-sm text-primary-foreground/80 sm:text-[15px]">{subtitle}</p>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-primary-foreground/75">{subtitle}</p>
         </div>
         {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
       </div>
@@ -59,15 +57,15 @@ export function TMPanel({
   className?: string;
 }) {
   return (
-    <Card className={cn("bento-card premium-halo enter-soft border-0 !p-0", className)}>
-      <CardHeader className="flex flex-row items-center justify-between gap-3 pb-3">
-        <CardTitle className="flex items-center gap-2 text-base font-semibold tracking-tight text-foreground">
+    <Card className={cn("bento-card premium-halo enter-soft !p-0", className)}>
+      <CardHeader className="flex flex-row items-center justify-between gap-3 border-b border-border/60 px-5 py-4">
+        <CardTitle className="flex items-center gap-2 text-xs font-bold uppercase text-foreground">
           {icon}
           {title}
         </CardTitle>
         {actions}
       </CardHeader>
-      <CardContent>{children}</CardContent>
+      <CardContent className="p-5">{children}</CardContent>
     </Card>
   );
 }
@@ -96,17 +94,17 @@ export function TMStat({
   return (
     <Card
       className={cn(
-        "bento-card premium-halo hover-lift shimmer-sweep enter-soft border-0 !p-4",
+        "bento-card premium-halo hover-lift enter-soft !p-4",
         onClick && "cursor-pointer",
       )}
       onClick={onClick}
     >
       <CardContent className="p-0">
         <div className="flex items-start justify-between gap-3">
-          <p className="min-w-0 text-[11px] uppercase tracking-wider text-muted-foreground">{label}</p>
+          <p className="min-w-0 text-[10px] font-bold uppercase text-muted-foreground">{label}</p>
           <span className={cn("shrink-0 [&_svg]:h-4 [&_svg]:w-4", toneClass)}>{icon}</span>
         </div>
-        <p className="mt-1 truncate text-2xl font-bold tracking-tight text-foreground">{value}</p>
+        <p className="mt-2 truncate text-2xl font-bold text-foreground">{value}</p>
       </CardContent>
     </Card>
   );
@@ -155,7 +153,7 @@ export function TMRow({ children, className }: { children: ReactNode; className?
   return (
     <div
       className={cn(
-        "focus-glow flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-surface/60 p-4 transition-colors hover:border-primary/35 hover:bg-surface",
+        "focus-glow flex flex-wrap items-center justify-between gap-4 rounded-lg border border-border bg-surface/55 p-4 transition-colors hover:border-primary/45 hover:bg-surface",
         className,
       )}
     >

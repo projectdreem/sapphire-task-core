@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Bell, CheckCheck, Menu, Search } from "lucide-react";
+import { Bell, CheckCheck, Menu, Plus, Search } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -132,7 +132,7 @@ export function TMShell() {
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-40 flex h-14 shrink-0 items-center gap-1.5 border-b border-border bg-background/80 px-3 backdrop-blur-xl lg:px-5">
+        <header className="sticky top-0 z-40 grid h-14 shrink-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-border bg-background/80 px-3 backdrop-blur-xl lg:px-8">
           <button
             className="icon3d grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-foreground lg:hidden"
             onClick={() => setMobileOpen(true)}
@@ -140,19 +140,20 @@ export function TMShell() {
           >
             <Menu className="h-[18px] w-[18px]" />
           </button>
-          <p className="min-w-0 truncate text-sm font-medium text-foreground">{activeLabel}</p>
-          <div className="flex-1" />
           <button
-            className="icon3d hidden h-9 w-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-foreground sm:grid"
+            className="hidden min-w-0 max-w-sm items-center gap-2 rounded-md border border-border bg-surface/40 px-3 py-2 text-left text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground sm:flex"
             onClick={() => setScreen("task_inbox")}
             aria-label="Search tasks"
           >
-            <Search className="h-[18px] w-[18px]" />
+            <Search className="h-4 w-4 shrink-0" />
+            <span className="truncate">Search tasks, codes or clients…</span>
           </button>
+          <p className="min-w-0 truncate text-sm font-medium text-foreground sm:hidden">{activeLabel}</p>
+          <div className="flex items-center justify-end gap-2">
           <Popover>
             <PopoverTrigger asChild>
               <button
-                className="icon3d relative grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-foreground"
+                className="relative grid h-9 w-9 shrink-0 place-items-center rounded-md border border-transparent text-muted-foreground transition-colors hover:border-border hover:bg-surface hover:text-foreground"
                 aria-label="Notifications"
               >
                 <Bell className="h-[18px] w-[18px]" />
@@ -197,10 +198,16 @@ export function TMShell() {
               </ScrollArea>
             </PopoverContent>
           </Popover>
+          <div className="hidden h-5 w-px bg-border sm:block" />
+          <Button size="sm" onClick={() => setScreen("task_creation")}>
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">New Task</span>
+          </Button>
+          </div>
         </header>
 
         <main className="flex-1">
-          <div className="mx-auto w-full max-w-[1600px] space-y-6 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+          <div className="mx-auto w-full max-w-[1600px] space-y-6 px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
             {content()}
           </div>
         </main>
